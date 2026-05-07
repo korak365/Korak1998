@@ -1,0 +1,28 @@
+{
+    "title": "Input Schema for Pinterest Aesthetic Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "boardUrls": {
+            "title": "Pinterest Board URLs",
+            "type": "array",
+            "description": "URLs of Pinterest boards to scrape images from.",
+            "editor": "requestListSources",
+            "prefill": [
+                { "url": "https://www.pinterest.com/example/board-name/" }
+            ]
+        },
+        "downloadDirectory": {
+            "title": "Download Directory",
+            "type": "string",
+            "description": "Local directory to store downloaded images.",
+            "default": "./downloads"
+        },
+        "maxImages": {
+            "title": "Maximum Images per Board",
+            "type": "integer",
+            "description": "Limit the number of images to scrape per board.",
+            "default": 50
+        }
+    }
+}

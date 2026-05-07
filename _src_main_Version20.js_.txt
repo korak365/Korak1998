@@ -1,0 +1,74 @@
+// Import required modules
+import { Actor } from 'apify';
+import { CheerioCrawler, Dataset } from 'crawlee';
+import fs from 'fs';
+import axios from 'axios';
+
+await Actor.init();
+
+const { boardUrls = [], downloadDirectory = './downloads', maxImages = 50 } = (await Actor.getInput()) || {};
+
+// Ensure download directory exists
+if (!fs.existsSync(downloadDirectory)) {
+    fs.mkdirSync(downloadDirectory, { recursive: true });
+}
+
+// Download helper function
+const downloadImage = async (url, filepath) => {
+    const writer = fs.createWriteStream(filepath);
+    const response = await axios({ url, method: 'GET', responseType: 'stream' });
+    response.data.pipe(writer);
+
+    return new Promise((resolve, reject) => {
+        writer.on('finish', resolve);
+        writer.on('error', reject);
+    });
+};
+
+// Define crawler
+const crawler = new CheerioCrawler({
+    async requestHandler({ $, request, enqueueLinks, log }) {
+        log.info(`Scraping board: ${request.url}`);
+
+        // Extract image data from Pinterest board
+        const pins = $('.Collection-ItemHoverContainer'); // Update if Pinterest's DOM changes
+        for (const pin of pins.slice(0, maxImages)) {
+            const imageUrl = $(pin).find('img').attr('src');
+            const pinUrl = $(pin).find('a').attr('href');
+            const title = $(pin).find('.description').text();
+            const tags = $(pin).find('.tags').text().split('#').map(tag => tag.trim()).filter(tag => tag);
+
+            if (!imageUrl) continue;
+
+            // Download image
+            const filename = imageUrl.split('/').pop();
+            const filepath = `${downloadDirectory}/${filename}`;
+            await downloadImage(imageUrl, filepath);
+
+            // Save metadata
+            await Dataset.pushData({
+                imageUrl,
+                title: title || 'No title',
+                description: title || 'No description',
+                boardUrl: request.url,
+                pinUrl: pinUrl ? `https://www.pinterest.com${pinUrl}` : '',
+                tags,
+            });
+        }
+
+        // Enqueue more links if pagination exists
+        await enqueueLinks({
+            selector: '.NextPageButton',
+            baseUrl: request.loadedUrl,
+        });
+    },
+});
+
+// Start crawling
+for (const boardUrl of boardUrls) {
+    crawler.addRequests([{ url: boardUrl }]);
+}
+
+await crawler.run();
+
+await Actor.exit();

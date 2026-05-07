@@ -1,0 +1,69 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "imageUrl": {
+            "type": "string",
+            "title": "High-Res Image URL"
+        },
+        "title": {
+            "type": "string",
+            "title": "Image Title"
+        },
+        "description": {
+            "type": "string",
+            "title": "Image Description"
+        },
+        "boardUrl": {
+            "type": "string",
+            "title": "Pinterest Board URL"
+        },
+        "pinUrl": {
+            "type": "string",
+            "title": "Pin URL"
+        },
+        "tags": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "title": "Tags or Categories"
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Image Overview",
+            "transformation": {
+                "fields": ["imageUrl", "title", "description", "boardUrl", "pinUrl", "tags"]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "imageUrl": {
+                        "label": "Image URL",
+                        "format": "link"
+                    },
+                    "title": {
+                        "label": "Title",
+                        "format": "text"
+                    },
+                    "description": {
+                        "label": "Description",
+                        "format": "text"
+                    },
+                    "boardUrl": {
+                        "label": "Board URL",
+                        "format": "link"
+                    },
+                    "pinUrl": {
+                        "label": "Pin URL",
+                        "format": "link"
+                    },
+                    "tags": {
+                        "label": "Tags",
+                        "format": "array"
+                    }
+                }
+            }
+        }
+    }
+}

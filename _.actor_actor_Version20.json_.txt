@@ -1,0 +1,17 @@
+{
+    "actorSpecification": 1,
+    "name": "pinterest-aesthetic-scraper",
+    "title": "Pinterest Aesthetic Scraper",
+    "description": "Downloads high-res images and metadata from Pinterest boards for mood-boarding.",
+    "version": "0.0",
+    "meta": {
+        "templateId": "ai-generated-actor",
+        "generatedBy": "copilot-2026"
+    },
+    "input": "./input_schema.json",
+    "output": "./output_schema.json",
+    "storages": {
+        "dataset": "./dataset_schema.json"
+    },
+    "dockerfile": "../Dockerfile"
+}

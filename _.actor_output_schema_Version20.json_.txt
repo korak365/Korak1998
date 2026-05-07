@@ -1,0 +1,11 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "title": "Output Schema for Pinterest Aesthetic Scraper",
+    "properties": {
+        "overview": {
+            "type": "string",
+            "title": "Scraped Image Metadata",
+            "template": "{{links.apiDefaultDatasetUrl}}/items?view=overview"
+        }
+    }
+}
